@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -40,9 +41,22 @@ public class UserController {
     //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
     //This method calls the business logic and after the user record is persisted in the database, directs to login page
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
-    public String registerUser(User user) {
-        userService.registerUser(user);
-        return "redirect:/users/login";
+    public String registerUser(User user, Model model, final RedirectAttributes redirectAttributes) {
+        String password = user.getPassword();
+        String[] passwordRegexChecks = {".*[a-zA-Z]+.*", //Character
+                ".*[0-9]+.*", //digit
+                ".*[!@#$%^&*(),.?:{}|<>]+.*"//special-character
+        };
+
+        Boolean isValid = (password.matches(passwordRegexChecks[0]) && (password.matches(passwordRegexChecks[1]) && password.matches(passwordRegexChecks[2])));
+        if (isValid) {
+            userService.registerUser(user);
+            return "users/login";
+        } else {
+            model.addAttribute("passwordTypeError", true);
+            redirectAttributes.addFlashAttribute("passwordTypeError", true);
+            return "redirect:/users/registration";
+        }
     }
 
     //This controller method is called when the request pattern is of type 'users/login'
