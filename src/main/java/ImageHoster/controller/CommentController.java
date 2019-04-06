@@ -72,7 +72,7 @@ public class CommentController {
             tagString.append(lastTag.getName());
             return tagString.toString();
         }
-        return "";
+        return tagString.toString();
     }
 
 }
