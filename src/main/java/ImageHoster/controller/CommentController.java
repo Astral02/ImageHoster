@@ -25,7 +25,7 @@ import ImageHoster.service.ImageService;
 @Controller
 public class CommentController {
 
-    @Autowired(required = true)
+    @Autowired
     private CommentService commentService;
 
     @Autowired
