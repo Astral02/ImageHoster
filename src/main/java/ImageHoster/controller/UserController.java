@@ -49,12 +49,14 @@ public class UserController {
         };
 
         Boolean isValid = (password.matches(passwordRegexChecks[0]) && (password.matches(passwordRegexChecks[1]) && password.matches(passwordRegexChecks[2])));
+        String error = "Password must contain atleast 1 alphabet, 1 number & 1 special character";
         if (isValid) {
             userService.registerUser(user);
             return "users/login";
         } else {
-            model.addAttribute("passwordTypeError", true);
-            redirectAttributes.addFlashAttribute("passwordTypeError", true);
+            redirectAttributes.addAttribute("passwordTypeError", error);
+            model.addAttribute("passwordTypeError", error);
+            redirectAttributes.addFlashAttribute("passwordTypeError", error);
             return "redirect:/users/registration";
         }
     }
